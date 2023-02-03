@@ -68,18 +68,18 @@ const Contractfunction = () => {
   useEffect(() => {
     (async () => {
       let data = [];
-      if (chainId !== 5 && isConnect) {
+      if (chainId !== 0x61 && isConnect) {
         data = [
           {
-            chainId: "0x5",
-            chainName: "Goerli test network",
+            chainId: "0x61",
+            chainName: "Smart Chain - Testnet",
             nativeCurrency: {
-              name: "ETH",
-              symbol: "GoerliETH",
+              name: "BNB",
+              symbol: "BNB",
               decimals: 18,
             },
-            rpcUrls: ["https://goerli.infura.io/v3/"],
-            blockExplorerUrls: ["https://goerli.etherscan.io"],
+            rpcUrls: ["https://bsc-testnet.public.blastapi.io/"],
+            blockExplorerUrls: ["https://testnet.bscscan.com"],
           },
         ];
         console.log("chainId", chainId);
