@@ -48,7 +48,6 @@ const Contractfunction = () => {
     setAccount();
     setChainId();
     setBalance();
-    // setNetwork("");
   };
   useEffect(() => {
     (async () => {
@@ -101,7 +100,6 @@ const Contractfunction = () => {
     if (provider?.on) {
       const handleAccountsChanged = async (accounts) => {
         connectWallet();
-        // console.log("accountsChanged", accounts);
 
         if (accounts) {
           let account = await Web3.utils.toChecksumAddress(accounts[0]);
@@ -114,7 +112,6 @@ const Contractfunction = () => {
       };
 
       const handleDisconnect = () => {
-        // console.log("disconnect", error);
         disConnectWallet();
       };
 
@@ -135,7 +132,6 @@ const Contractfunction = () => {
     <div>
       <Header
         isConnect={isConnect}
-        // balance={balance}
         account={account}
         connectWallet={connectWallet}
         disConnectWallet={disConnectWallet}
