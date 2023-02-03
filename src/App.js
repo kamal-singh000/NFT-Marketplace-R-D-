@@ -4,7 +4,7 @@ import Contractfunction from "./Contractfunction";
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <Contractfunction />
     </div>
   );
