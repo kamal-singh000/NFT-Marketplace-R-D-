@@ -61,41 +61,41 @@ const Contractfunction = () => {
     refreshState();
     setConnect(false);
   };
-  // useEffect(() => {
-  //   (async () => {
-  //     let data = [];
-  //     if (chainId !== 5 && isConnect) {
-  //       data = [
-  //         {
-  //           chainId: "0x5",
-  //           chainName: "Goerli test network",
-  //           nativeCurrency: {
-  //             name: "ETH",
-  //             symbol: "GoerliETH",
-  //             decimals: 18,
-  //           },
-  //           rpcUrls: ["https://goerli.infura.io/v3/"],
-  //           blockExplorerUrls: ["https://goerli.etherscan.io"],
-  //         },
-  //       ];
-  //       console.log("chainId", chainId);
+  useEffect(() => {
+    (async () => {
+      let data = [];
+      if (chainId !== 5 && isConnect) {
+        data = [
+          {
+            chainId: "0x5",
+            chainName: "Goerli test network",
+            nativeCurrency: {
+              name: "ETH",
+              symbol: "GoerliETH",
+              decimals: 18,
+            },
+            rpcUrls: ["https://goerli.infura.io/v3/"],
+            blockExplorerUrls: ["https://goerli.etherscan.io"],
+          },
+        ];
+        console.log("chainId", chainId);
 
-  //       try {
-  //         await window.ethereum
-  //           .request({
-  //             method: "wallet_addEthereumChain",
-  //             params: data,
-  //           })
-  //           .then((resp) => {
-  //             console.log("resp", resp);
-  //             connectWallet();
-  //           });
-  //       } catch {
-  //         console.log("catched");
-  //       }
-  //     }
-  //   })();
-  // }, [chainId]);
+        try {
+          await window.ethereum
+            .request({
+              method: "wallet_addEthereumChain",
+              params: data,
+            })
+            .then((resp) => {
+              console.log("resp", resp);
+              connectWallet();
+            });
+        } catch {
+          console.log("catched");
+        }
+      }
+    })();
+  }, [chainId]);
 
   useEffect(() => {
     if (provider?.on) {
