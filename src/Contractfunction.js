@@ -1,9 +1,11 @@
-import { ethers } from "ethers";
 import React from "react";
+import { ethers } from "ethers";
 import { useState } from "react";
 import { useEffect, useCallback } from "react";
 import Web3Modal from "web3modal";
 import Header from "./Header";
+import Web3 from "web3";
+
 let web3Modal = new Web3Modal({
   network: "testnet",
   cacheProvider: true,
@@ -59,47 +61,46 @@ const Contractfunction = () => {
     refreshState();
     setConnect(false);
   };
-  useEffect(() => {
-    (async () => {
-      let data = [];
-      if (chainId !== 5 && isConnect) {
-        data = [
-          {
-            chainId: "0x5",
-            chainName: "Goerli test network",
-            nativeCurrency: {
-              name: "ETH",
-              symbol: "GoerliETH",
-              decimals: 18,
-            },
-            rpcUrls: ["https://goerli.infura.io/v3/"],
-            blockExplorerUrls: ["https://goerli.etherscan.io"],
-          },
-        ];
-        console.log("chainId", chainId);
+  // useEffect(() => {
+  //   (async () => {
+  //     let data = [];
+  //     if (chainId !== 5 && isConnect) {
+  //       data = [
+  //         {
+  //           chainId: "0x5",
+  //           chainName: "Goerli test network",
+  //           nativeCurrency: {
+  //             name: "ETH",
+  //             symbol: "GoerliETH",
+  //             decimals: 18,
+  //           },
+  //           rpcUrls: ["https://goerli.infura.io/v3/"],
+  //           blockExplorerUrls: ["https://goerli.etherscan.io"],
+  //         },
+  //       ];
+  //       console.log("chainId", chainId);
 
-        try {
-          await window.ethereum
-            .request({
-              method: "wallet_addEthereumChain",
-              params: data,
-            })
-            .then((resp) => {
-              console.log("resp", resp);
-              connectWallet();
-            });
-        } catch {
-          console.log("catched");
-        }
-      }
-    })();
-  }, [chainId]);
+  //       try {
+  //         await window.ethereum
+  //           .request({
+  //             method: "wallet_addEthereumChain",
+  //             params: data,
+  //           })
+  //           .then((resp) => {
+  //             console.log("resp", resp);
+  //             connectWallet();
+  //           });
+  //       } catch {
+  //         console.log("catched");
+  //       }
+  //     }
+  //   })();
+  // }, [chainId]);
 
   useEffect(() => {
     if (provider?.on) {
       const handleAccountsChanged = async (accounts) => {
         connectWallet();
-        await getList();
         // console.log("accountsChanged", accounts);
 
         if (accounts) {
