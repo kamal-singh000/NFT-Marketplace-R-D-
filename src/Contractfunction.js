@@ -1,14 +1,141 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { ethers } from "ethers";
+import Web3Modal from "web3modal";
+import Header from "./Header";
+import Web3 from "web3";
 import NFTFunc from "./ABI/DODONFT.json";
 import NFTStakeFunc from "./ABI/ERC721Staking.json";
-import Web3 from "web3";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+let web3Modal = new Web3Modal({
+  network: "testnet",
+  cacheProvider: true,
+  providerOptions: {},
+});
 let web3 = new Web3(Web3.givenProvider);
 const Contractfunction = () => {
+  const [provider, setProvider] = useState(null);
+  const [signer, setSigner] = useState();
+  const [account, setAccount] = useState(null);
+  const [error, setError] = useState("");
+  const [chainId, setChainId] = useState();
+  const [isConnect, setConnect] = useState(false);
+  const [balance, setBalance] = useState("-");
   const [loading1, setLoading1] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [loading3, setLoading3] = useState(false);
+
+  const connectWallet = async () => {
+    try {
+      const provider = await web3Modal.connect("walletconnect");
+      const library = new ethers.providers.Web3Provider(provider);
+      const signer = await library.getSigner();
+      localStorage.setItem("modalProvider", 1);
+      const accounts = await library.listAccounts();
+      const network = await library.getNetwork();
+      let accBalance = await signer.getBalance();
+      accBalance = ethers.utils.formatEther(accBalance);
+      setBalance(accBalance);
+      setProvider(provider);
+      setSigner(signer);
+      if (accounts) {
+        let account = await Web3.utils.toChecksumAddress(accounts[0]);
+        setAccount(account);
+        setConnect(true);
+      }
+      setChainId(network.chainId);
+    } catch (error) {
+      setError(error);
+    }
+  };
+
+  const refreshState = async () => {
+    setAccount();
+    setChainId();
+    setBalance();
+    // setNetwork("");
+  };
+  useEffect(() => {
+    (async () => {
+      if (localStorage.getItem("modalProvider")) await connectWallet();
+    })();
+  }, []);
+  const disConnectWallet = async () => {
+    await web3Modal.clearCachedProvider();
+    localStorage.removeItem("modalProvider");
+    refreshState();
+    setConnect(false);
+  };
+  useEffect(() => {
+    (async () => {
+      let data = [];
+      if (chainId !== 5 && isConnect) {
+        data = [
+          {
+            chainId: "0x5",
+            chainName: "Goerli test network",
+            nativeCurrency: {
+              name: "ETH",
+              symbol: "GoerliETH",
+              decimals: 18,
+            },
+            rpcUrls: ["https://goerli.infura.io/v3/"],
+            blockExplorerUrls: ["https://goerli.etherscan.io"],
+          },
+        ];
+        console.log("chainId", chainId);
+
+        try {
+          await window.ethereum
+            .request({
+              method: "wallet_addEthereumChain",
+              params: data,
+            })
+            .then((resp) => {
+              console.log("resp", resp);
+              connectWallet();
+            });
+        } catch {
+          console.log("catched");
+        }
+      }
+    })();
+  }, [chainId]);
+
+  useEffect(() => {
+    if (provider?.on) {
+      const handleAccountsChanged = async (accounts) => {
+        connectWallet();
+        // console.log("accountsChanged", accounts);
+
+        if (accounts) {
+          let account = await Web3.utils.toChecksumAddress(accounts[0]);
+          setAccount(account);
+        }
+      };
+
+      const handleChainChanged = (_hexChainId) => {
+        setChainId(_hexChainId);
+      };
+
+      const handleDisconnect = () => {
+        // console.log("disconnect", error);
+        disConnectWallet();
+      };
+
+      provider.on("accountsChanged", handleAccountsChanged);
+      provider.on("chainChanged", handleChainChanged);
+      provider.on("disconnect", handleDisconnect);
+
+      return () => {
+        if (provider.removeListener) {
+          provider.removeListener("accountsChanged", handleAccountsChanged);
+          provider.removeListener("chainChanged", handleChainChanged);
+          provider.removeListener("disconnect", handleDisconnect);
+        }
+      };
+    }
+  }, [provider]);
 
   const submitNFTMinting = async (e) => {
     e.preventDefault();
@@ -21,7 +148,7 @@ const Contractfunction = () => {
     );
     await contractFunc.methods
       .mint(uri)
-      .send({ from: "0xAf53AAF5A6cA0d55459AA8fC50069b4c9C70F94D" })
+      .send({ from: account })
       .on("transactionHash", (hash) => {
         console.log("progress", hash);
         toast.info("Transaction is Processing...");
@@ -50,7 +177,7 @@ const Contractfunction = () => {
     );
     await contractFunc.methods
       .setApprovalForAll(...obj)
-      .send({ from: "0xAf53AAF5A6cA0d55459AA8fC50069b4c9C70F94D" })
+      .send({ from: account })
       .on("transactionHash", (hash) => {
         console.log("progress", hash);
         toast.info("Transaction is Processing...");
@@ -81,7 +208,7 @@ const Contractfunction = () => {
     console.log("contractFunc", contractFunc);
     await contractFunc.methods
       .stake(...obj)
-      .send({ from: "0xAf53AAF5A6cA0d55459AA8fC50069b4c9C70F94D" })
+      .send({ from: account })
       .on("transactionHash", (hash) => {
         console.log("progress", hash);
         toast.info("Transaction is Processing...");
@@ -99,6 +226,13 @@ const Contractfunction = () => {
   };
   return (
     <>
+      <Header
+        isConnect={isConnect}
+        // balance={balance}
+        account={account}
+        connectWallet={connectWallet}
+        disConnectWallet={disConnectWallet}
+      />
       <div class="container text-start">
         <div class="row mt-5">
           <div class="col m-4">
