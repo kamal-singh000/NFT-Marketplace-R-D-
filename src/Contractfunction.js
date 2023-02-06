@@ -13,6 +13,21 @@ let web3Modal = new Web3Modal({
   providerOptions: {},
 });
 let web3 = new Web3(Web3.givenProvider);
+
+const SuccessPopUp = ({ txn }) => {
+  return (
+    <>
+      Transaction Successful! Check your transaction{" "}
+      <a
+        href={`https://testnet.bscscan.com/tx/${txn}`}
+        rel="noreferrer"
+        target="_blank"
+      >
+        Click here
+      </a>
+    </>
+  );
+};
 const Contractfunction = () => {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState();
@@ -156,7 +171,7 @@ const Contractfunction = () => {
       .on("receipt", (receipt) => {
         console.log("complete", receipt);
         setLoading1(false);
-        toast.success("Transaction Successful!");
+        toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
       })
       .on("error", (error) => {
         console.log("error", error);
@@ -185,7 +200,7 @@ const Contractfunction = () => {
       .on("receipt", (receipt) => {
         console.log("complete", receipt);
         setLoading2(false);
-        toast.success("Transaction Successful!");
+        toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
       })
       .on("error", (error) => {
         console.log("error", error);
@@ -216,7 +231,7 @@ const Contractfunction = () => {
       .on("receipt", (receipt) => {
         console.log("complete", receipt);
         setLoading3(false);
-        toast.success("Transaction Successful!");
+        toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
       })
       .on("error", (error) => {
         console.log("error", error);
@@ -362,7 +377,7 @@ const Contractfunction = () => {
         autoClose={10000}
         hideProgressBar={false}
         newestOnTop={false}
-        closeOnClick
+        closeOnClick={false}
         rtl={false}
         pauseOnFocusLoss
         draggable
