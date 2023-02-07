@@ -218,7 +218,7 @@ const Contractfunction = () => {
     console.log("data3", ...obj);
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0x74869452f793C9Ad62Cd83Ee2f69d88B17DA17CC"
+      "0xBd6E0F9223FA24F3483382bb809c2026f77488a8"
     );
     console.log("contractFunc", contractFunc);
     await contractFunc.methods
@@ -239,6 +239,8 @@ const Contractfunction = () => {
         toast.error("Transaction Failed");
       });
   };
+  const buyNFT = () => {};
+  const sellNFT = () => {};
   return (
     <>
       <Header
@@ -250,7 +252,7 @@ const Contractfunction = () => {
       />
       <div class="container text-start">
         <div class="row mt-5">
-          <div class="col m-4">
+          <div class="col-4 p-4">
             <div class="card">
               <div class="card-header">NFT Minting</div>
               <div class="card-body">
@@ -282,7 +284,7 @@ const Contractfunction = () => {
               </div>
             </div>
           </div>
-          <div class="col m-4">
+          <div class="col-4 p-4">
             <div class="card">
               <div class="card-header">Set Approval For All</div>
               <div class="card-body">
@@ -326,7 +328,7 @@ const Contractfunction = () => {
               </div>
             </div>
           </div>
-          <div class="col m-4">
+          <div class="col-4 p-4">
             <div class="card">
               <div class="card-header">Stake NFT</div>
               <div class="card-body">
@@ -364,6 +366,135 @@ const Contractfunction = () => {
                       class="btn btn-primary"
                     >
                       {loading3 ? "Loading..." : "Submit"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-4 p-4">
+            <div class="card">
+              <div class="card-header">Buy NFT</div>
+              <div class="card-body">
+                <form onSubmit={buyNFT}>
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">
+                      uri (string)
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="uri"
+                      required
+                    />
+                  </div>
+
+                  <div class="d-grid gap-2">
+                    <button
+                      type="submit"
+                      disabled={loading1}
+                      class="btn btn-primary"
+                    >
+                      {loading1 ? "Loading..." : "BUY NFT"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-4 p-4">
+            <div class="card">
+              <div class="card-header">Sell NFT</div>
+              <div class="card-body">
+                <form onSubmit={sellNFT}>
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">
+                      _tokenId (uint256[])
+                    </label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="tokenId"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">
+                      _pricePerNFT (uint256)(in WEI)
+                    </label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="pricePerNFT"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">
+                      _startTime (uint256)
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="startTime"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">
+                      _endTime (uint256)
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="endTime"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">
+                      _tokenIds (uint256[])
+                    </label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="tokenIds"
+                      required
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">
+                      _nftCollection (address)
+                    </label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="nftCollection"
+                      required
+                    />
+                  </div>
+
+                  <div class="d-grid gap-2">
+                    <button
+                      type="submit"
+                      disabled={loading1}
+                      class="btn btn-primary"
+                    >
+                      {loading1 ? "Loading..." : "SELL NFT"}
                     </button>
                   </div>
                 </form>
