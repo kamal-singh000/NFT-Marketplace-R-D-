@@ -13,6 +13,21 @@ let web3Modal = new Web3Modal({
   providerOptions: {},
 });
 let web3 = new Web3(Web3.givenProvider);
+
+const SuccessPopUp = ({ txn }) => {
+  return (
+    <>
+      Transaction Successful! Check your transaction{" "}
+      <a
+        href={`https://testnet.bscscan.com/tx/${txn}`}
+        rel="noreferrer"
+        target="_blank"
+      >
+        Click here
+      </a>
+    </>
+  );
+};
 const Contractfunction = () => {
   const [provider, setProvider] = useState(null);
   const [signer, setSigner] = useState();
@@ -153,7 +168,7 @@ const Contractfunction = () => {
       .on("receipt", (receipt) => {
         console.log("complete", receipt);
         setLoading1(false);
-        toast.success("Transaction Successful!");
+        toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
       })
       .on("error", (error) => {
         console.log("error", error);
@@ -182,7 +197,7 @@ const Contractfunction = () => {
       .on("receipt", (receipt) => {
         console.log("complete", receipt);
         setLoading2(false);
-        toast.success("Transaction Successful!");
+        toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
       })
       .on("error", (error) => {
         console.log("error", error);
@@ -200,7 +215,7 @@ const Contractfunction = () => {
     console.log("data3", ...obj);
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0x74869452f793C9Ad62Cd83Ee2f69d88B17DA17CC"
+      "0xBd6E0F9223FA24F3483382bb809c2026f77488a8"
     );
     console.log("contractFunc", contractFunc);
     await contractFunc.methods
@@ -213,7 +228,7 @@ const Contractfunction = () => {
       .on("receipt", (receipt) => {
         console.log("complete", receipt);
         setLoading3(false);
-        toast.success("Transaction Successful!");
+        toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
       })
       .on("error", (error) => {
         console.log("error", error);
@@ -221,6 +236,36 @@ const Contractfunction = () => {
         toast.error("Transaction Failed");
       });
   };
+  //
+  const buyNFT = async (e) => {
+    e.preventDefault();
+    setLoading3(true);
+    const data = new FormData(e.target);
+    console.log("data3", data.get("orderId"), data.get("payAmount"));
+    let contractFunc = await new web3.eth.Contract(
+      NFTStakeFunc,
+      "0xBd6E0F9223FA24F3483382bb809c2026f77488a8"
+    );
+    console.log("contractFunc", contractFunc);
+    await contractFunc.methods
+      .buyNowPayment(data.get("orderId"), data.get("payAmount"))
+      .send({ from: account })
+      .on("transactionHash", (hash) => {
+        console.log("progress", hash);
+        toast.info("Transaction is Processing...");
+      })
+      .on("receipt", (receipt) => {
+        console.log("complete", receipt);
+        setLoading3(false);
+        toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
+      })
+      .on("error", (error) => {
+        console.log("error", error);
+        setLoading3(false);
+        toast.error("Transaction Failed");
+      });
+  };
+  const sellNFT = () => {};
   return (
     <>
       <Header
@@ -231,7 +276,7 @@ const Contractfunction = () => {
       />
       <div className="container text-start">
         <div className="row mt-5">
-          <div className="col m-4">
+          <div className="col-4 p-4">
             <div className="card">
               <div className="card-header">NFT Minting</div>
               <div className="card-body">
@@ -263,7 +308,7 @@ const Contractfunction = () => {
               </div>
             </div>
           </div>
-          <div className="col m-4">
+          <div className="col-4 p-4">
             <div className="card">
               <div className="card-header">Set Approval For All</div>
               <div className="card-body">
@@ -307,7 +352,7 @@ const Contractfunction = () => {
               </div>
             </div>
           </div>
-          <div className="col m-4">
+          <div className="col-4 p-4">
             <div className="card">
               <div className="card-header">Stake NFT</div>
               <div className="card-body">
@@ -351,6 +396,148 @@ const Contractfunction = () => {
               </div>
             </div>
           </div>
+          <div className="col-4 p-4">
+            <div className="card">
+              <div className="card-header">Buy NFT</div>
+              <div className="card-body">
+                <form onSubmit={buyNFT}>
+                  <div className="mb-3">
+                    <label for="exampleInputEmail1" className="form-label">
+                      orderId
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="orderId"
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label for="exampleInputEmail1" className="form-label">
+                      payAmount
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="payAmount"
+                      required
+                    />
+                  </div>
+
+                  <div className="d-grid gap-2">
+                    <button
+                      type="submit"
+                      disabled={loading1}
+                      className="btn btn-primary"
+                    >
+                      {loading1 ? "Loading..." : "BUY NFT"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div className="col-4 p-4">
+            <div className="card">
+              <div className="card-header">Sell NFT</div>
+              <div className="card-body">
+                <form onSubmit={sellNFT}>
+                  <div className="mb-3">
+                    <label for="exampleInputEmail1" className="form-label">
+                      _tokenId (uint256[])
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="tokenId"
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label for="exampleInputEmail1" className="form-label">
+                      _pricePerNFT (uint256)(in WEI)
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="pricePerNFT"
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label for="exampleInputEmail1" className="form-label">
+                      _startTime (uint256)
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="startTime"
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label for="exampleInputEmail1" className="form-label">
+                      _endTime (uint256)
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="endTime"
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label for="exampleInputEmail1" className="form-label">
+                      _tokenIds (uint256[])
+                    </label>
+                    <input
+                      type="number"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="tokenIds"
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label for="exampleInputEmail1" className="form-label">
+                      _nftCollection (address)
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="nftCollection"
+                      required
+                    />
+                  </div>
+
+                  <div className="d-grid gap-2">
+                    <button
+                      type="submit"
+                      disabled={loading1}
+                      className="btn btn-primary"
+                    >
+                      {loading1 ? "Loading..." : "SELL NFT"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <ToastContainer
@@ -358,7 +545,7 @@ const Contractfunction = () => {
         autoClose={10000}
         hideProgressBar={false}
         newestOnTop={false}
-        closeOnClick
+        closeOnClick={false}
         rtl={false}
         pauseOnFocusLoss
         draggable

@@ -7,7 +7,7 @@ const Header = (props) => {
       <nav className="navbar navbar-expand-lg bg-dark">
         <div className="container">
           <a className="navbar-brand fs-1 text-white" href="#">
-            NFTs
+            NFT Marketplace (R&D)
           </a>
           <button
             className="navbar-toggler"
