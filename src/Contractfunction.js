@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import Header from "./Header";
 import Web3 from "web3";
+import dayjs from "dayjs";
 import NFTFunc from "./ABI/DODONFT.json";
 import NFTStakeFunc from "./ABI/ERC721Staking.json";
 import { ToastContainer, toast } from "react-toastify";
@@ -39,6 +40,9 @@ const Contractfunction = () => {
   const [loading1, setLoading1] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [loading3, setLoading3] = useState(false);
+  const [loading4, setLoading4] = useState(false);
+  const [loading5, setLoading5] = useState(false);
+  const [value, setValue] = useState(dayjs("2022-04-07"));
 
   const connectWallet = async () => {
     try {
@@ -240,7 +244,51 @@ const Contractfunction = () => {
       });
   };
   const buyNFT = () => {};
-  const sellNFT = () => {};
+  const sellNFT = async (e) => {
+    e.preventDefault();
+    // setLoading3(true);
+    const data = new FormData(e.target);
+    console.log(
+      "data",
+      data.get("tokenId"),
+      data.get("pricePerNFT"),
+      dayjs(data.get("startTime")).unix(),
+      dayjs(data.get("endTime")).unix(),
+      data.get("tokenIds").split(","),
+      data.get("nftCollection")
+    );
+    let obj = await [
+      data.get("tokenId"),
+      data.get("pricePerNFT"),
+      dayjs(data.get("startTime")).unix(),
+      dayjs(data.get("endTime")).unix(),
+      data.get("tokenIds").split(","),
+      data.get("nftCollection"),
+    ];
+    console.log("data3", ...obj);
+    let contractFunc = await new web3.eth.Contract(
+      NFTStakeFunc,
+      "0xBd6E0F9223FA24F3483382bb809c2026f77488a8"
+    );
+    console.log("contractFunc", contractFunc);
+    await contractFunc.methods
+      .placeOrder(...obj)
+      .send({ from: account })
+      .on("transactionHash", (hash) => {
+        console.log("progress", hash);
+        toast.info("Transaction is Processing...");
+      })
+      .on("receipt", (receipt) => {
+        console.log("complete", receipt);
+        setLoading3(false);
+        toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
+      })
+      .on("error", (error) => {
+        console.log("error", error);
+        setLoading3(false);
+        toast.error("Transaction Failed");
+      });
+  };
   return (
     <>
       <Header
@@ -394,10 +442,10 @@ const Contractfunction = () => {
                   <div class="d-grid gap-2">
                     <button
                       type="submit"
-                      disabled={loading1}
+                      disabled={loading4}
                       class="btn btn-primary"
                     >
-                      {loading1 ? "Loading..." : "BUY NFT"}
+                      {loading4 ? "Loading..." : "BUY NFT"}
                     </button>
                   </div>
                 </form>
@@ -435,12 +483,13 @@ const Contractfunction = () => {
                       required
                     />
                   </div>
+
                   <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">
                       _startTime (uint256)
                     </label>
                     <input
-                      type="text"
+                      type="datetime-local"
                       class="form-control"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
@@ -453,7 +502,7 @@ const Contractfunction = () => {
                       _endTime (uint256)
                     </label>
                     <input
-                      type="text"
+                      type="datetime-local"
                       class="form-control"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
@@ -466,7 +515,7 @@ const Contractfunction = () => {
                       _tokenIds (uint256[])
                     </label>
                     <input
-                      type="number"
+                      type="text"
                       class="form-control"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
@@ -491,10 +540,10 @@ const Contractfunction = () => {
                   <div class="d-grid gap-2">
                     <button
                       type="submit"
-                      disabled={loading1}
+                      disabled={loading5}
                       class="btn btn-primary"
                     >
-                      {loading1 ? "Loading..." : "SELL NFT"}
+                      {loading5 ? "Loading..." : "SELL NFT"}
                     </button>
                   </div>
                 </form>
