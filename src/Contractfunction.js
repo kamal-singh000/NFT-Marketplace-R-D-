@@ -218,7 +218,7 @@ const Contractfunction = () => {
     console.log("data3", ...obj);
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0xBd6E0F9223FA24F3483382bb809c2026f77488a8"
+      "0x4030f3481BF159906c8311bB0bC6560BB2c599f0"
     );
     console.log("contractFunc", contractFunc);
     await contractFunc.methods
@@ -247,7 +247,7 @@ const Contractfunction = () => {
     console.log("data3", data.get("orderId"), data.get("payAmount"));
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0xBd6E0F9223FA24F3483382bb809c2026f77488a8"
+      "0x4030f3481BF159906c8311bB0bC6560BB2c599f0"
     );
     console.log("contractFunc", contractFunc);
     await contractFunc.methods
@@ -292,7 +292,7 @@ const Contractfunction = () => {
     console.log("data3", ...obj);
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0xBd6E0F9223FA24F3483382bb809c2026f77488a8"
+      "0x4030f3481BF159906c8311bB0bC6560BB2c599f0"
     );
     console.log("contractFunc", contractFunc);
     await contractFunc.methods
