@@ -229,20 +229,20 @@ const Contractfunction = () => {
         connectWallet={connectWallet}
         disConnectWallet={disConnectWallet}
       />
-      <div class="container text-start">
-        <div class="row mt-5">
-          <div class="col m-4">
-            <div class="card">
-              <div class="card-header">NFT Minting</div>
-              <div class="card-body">
+      <div className="container text-start">
+        <div className="row mt-5">
+          <div className="col m-4">
+            <div className="card">
+              <div className="card-header">NFT Minting</div>
+              <div className="card-body">
                 <form onSubmit={submitNFTMinting}>
-                  <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">
+                  <div className="mb-3">
+                    <label for="exampleInputEmail1" className="form-label">
                       uri (string)
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
                       name="uri"
@@ -250,11 +250,11 @@ const Contractfunction = () => {
                     />
                   </div>
 
-                  <div class="d-grid gap-2">
+                  <div className="d-grid gap-2">
                     <button
                       type="submit"
                       disabled={loading1}
-                      class="btn btn-primary"
+                      className="btn btn-primary"
                     >
                       {loading1 ? "Loading..." : "Submit"}
                     </button>
@@ -263,42 +263,42 @@ const Contractfunction = () => {
               </div>
             </div>
           </div>
-          <div class="col m-4">
-            <div class="card">
-              <div class="card-header">Set Approval For All</div>
-              <div class="card-body">
+          <div className="col m-4">
+            <div className="card">
+              <div className="card-header">Set Approval For All</div>
+              <div className="card-body">
                 <form onSubmit={submitApprovalForAll}>
-                  <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">
+                  <div className="mb-3">
+                    <label for="exampleInputEmail1" className="form-label">
                       operator (address)
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
                       name="operator"
                       required
                     />
                   </div>
-                  <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">
+                  <div className="mb-3">
+                    <label for="exampleInputPassword1" className="form-label">
                       approved (bool)
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       id="exampleInputPassword1"
                       name="approval"
                       required
                     />
                   </div>
 
-                  <div class="d-grid gap-2">
+                  <div className="d-grid gap-2">
                     <button
                       type="submit"
                       disabled={loading2}
-                      class="btn btn-primary"
+                      className="btn btn-primary"
                     >
                       {loading2 ? "Loading..." : "Submit"}
                     </button>
@@ -307,42 +307,42 @@ const Contractfunction = () => {
               </div>
             </div>
           </div>
-          <div class="col m-4">
-            <div class="card">
-              <div class="card-header">Stake NFT</div>
-              <div class="card-body">
+          <div className="col m-4">
+            <div className="card">
+              <div className="card-header">Stake NFT</div>
+              <div className="card-body">
                 <form onSubmit={submitNFTStaking}>
-                  <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">
+                  <div className="mb-3">
+                    <label for="exampleInputEmail1" className="form-label">
                       _tokenIds (uint256[])
                     </label>
                     <input
                       type="number"
-                      class="form-control"
+                      className="form-control"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
                       name="tokenIds"
                       required
                     />
                   </div>
-                  <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">
+                  <div className="mb-3">
+                    <label for="exampleInputEmail1" className="form-label">
                       _nftCollection (address)
                     </label>
                     <input
                       type="text"
-                      class="form-control"
+                      className="form-control"
                       id="exampleInputEmail1"
                       aria-describedby="emailHelp"
                       name="nftCollection"
                       required
                     />
                   </div>
-                  <div class="d-grid gap-2">
+                  <div className="d-grid gap-2">
                     <button
                       type="submit"
                       disabled={loading3}
-                      class="btn btn-primary"
+                      className="btn btn-primary"
                     >
                       {loading3 ? "Loading..." : "Submit"}
                     </button>
