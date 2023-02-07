@@ -42,7 +42,6 @@ const Contractfunction = () => {
   const [loading3, setLoading3] = useState(false);
   const [loading4, setLoading4] = useState(false);
   const [loading5, setLoading5] = useState(false);
-  const [value, setValue] = useState(dayjs("2022-04-07"));
 
   const connectWallet = async () => {
     try {
@@ -246,7 +245,7 @@ const Contractfunction = () => {
   const buyNFT = () => {};
   const sellNFT = async (e) => {
     e.preventDefault();
-    // setLoading3(true);
+    setLoading5(true);
     const data = new FormData(e.target);
     console.log(
       "data",
@@ -280,12 +279,12 @@ const Contractfunction = () => {
       })
       .on("receipt", (receipt) => {
         console.log("complete", receipt);
-        setLoading3(false);
+        setLoading5(false);
         toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
       })
       .on("error", (error) => {
         console.log("error", error);
-        setLoading3(false);
+        setLoading5(false);
         toast.error("Transaction Failed");
       });
   };
