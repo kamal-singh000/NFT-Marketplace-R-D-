@@ -5,7 +5,8 @@ import Header from "./Header";
 import Web3 from "web3";
 import dayjs from "dayjs";
 import NFTFunc from "./ABI/DODONFT.json";
-import NFTStakeFunc from "./ABI/ERC721Staking.json";
+import NFTStakeFunc from "./ABI/ERC721Escrow.json";
+import MDToken from "./ABI/MDToken.json";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 let web3Modal = new Web3Modal({
@@ -42,6 +43,7 @@ const Contractfunction = () => {
   const [loading3, setLoading3] = useState(false);
   const [loading4, setLoading4] = useState(false);
   const [loading5, setLoading5] = useState(false);
+  const [loading6, setLoading6] = useState(false);
 
   const connectWallet = async () => {
     try {
@@ -218,7 +220,7 @@ const Contractfunction = () => {
     console.log("data3", ...obj);
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0x4030f3481BF159906c8311bB0bC6560BB2c599f0"
+      "0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB"
     );
     console.log("contractFunc", contractFunc);
     await contractFunc.methods
@@ -239,7 +241,36 @@ const Contractfunction = () => {
         toast.error("Transaction Failed");
       });
   };
-  //
+
+  const approveAllowance = async (e) => {
+    e.preventDefault();
+    setLoading6(true);
+    const data = new FormData(e.target);
+    console.log("data3", data.get("spender"), data.get("amount"));
+    let contractFunc = await new web3.eth.Contract(
+      MDToken,
+      "0x510601cb8Db1fD794DCE6186078b27A5e2944Ad6"
+    );
+    console.log("contractFunc", contractFunc);
+    await contractFunc.methods
+      .approve(data.get("spender"), data.get("amount"))
+      .send({ from: account })
+      .on("transactionHash", (hash) => {
+        console.log("progress", hash);
+        toast.info("Transaction is Processing...");
+      })
+      .on("receipt", (receipt) => {
+        console.log("complete", receipt);
+        setLoading6(false);
+        toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
+      })
+      .on("error", (error) => {
+        console.log("error", error);
+        setLoading6(false);
+        toast.error("Transaction Failed");
+      });
+  };
+
   const buyNFT = async (e) => {
     e.preventDefault();
     setLoading4(true);
@@ -247,7 +278,7 @@ const Contractfunction = () => {
     console.log("data3", data.get("orderId"), data.get("payAmount"));
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0x4030f3481BF159906c8311bB0bC6560BB2c599f0"
+      "0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB"
     );
     console.log("contractFunc", contractFunc);
     await contractFunc.methods
@@ -259,12 +290,12 @@ const Contractfunction = () => {
       })
       .on("receipt", (receipt) => {
         console.log("complete", receipt);
-        setLoading3(false);
+        setLoading4(false);
         toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
       })
       .on("error", (error) => {
         console.log("error", error);
-        setLoading3(false);
+        setLoading4(false);
         toast.error("Transaction Failed");
       });
   };
@@ -282,7 +313,7 @@ const Contractfunction = () => {
       data.get("nftCollection")
     );
     let obj = await [
-      data.get("tokenId"),
+      // data.get("tokenId"),
       data.get("pricePerNFT"),
       dayjs(data.get("startTime")).unix(),
       dayjs(data.get("endTime")).unix(),
@@ -292,7 +323,7 @@ const Contractfunction = () => {
     console.log("data3", ...obj);
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0x4030f3481BF159906c8311bB0bC6560BB2c599f0"
+      "0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB"
     );
     console.log("contractFunc", contractFunc);
     await contractFunc.methods
@@ -448,6 +479,51 @@ const Contractfunction = () => {
           </div>
           <div className="col-4 p-4">
             <div className="card">
+              <div className="card-header">Approve Allowance</div>
+              <div className="card-body">
+                <form onSubmit={approveAllowance}>
+                  <div className="mb-3">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
+                      spender (address)
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="spender"
+                      required
+                    />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
+                      amount (uint256)(in Ether)
+                    </label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="exampleInputEmail1"
+                      aria-describedby="emailHelp"
+                      name="amount"
+                      required
+                    />
+                  </div>
+
+                  <div className="d-grid gap-2">
+                    <button
+                      type="submit"
+                      disabled={loading6}
+                      className="btn btn-primary"
+                    >
+                      {loading6 ? "Loading..." : "Approve Allowance"}
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div className="col-4 p-4">
+            <div className="card">
               <div className="card-header">Buy NFT</div>
               <div className="card-body">
                 <form onSubmit={buyNFT}>
@@ -496,7 +572,7 @@ const Contractfunction = () => {
               <div className="card-header">Sell NFT</div>
               <div className="card-body">
                 <form onSubmit={sellNFT}>
-                  <div className="mb-3">
+                  {/* <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">
                       _tokenId (uint256[])
                     </label>
@@ -508,7 +584,7 @@ const Contractfunction = () => {
                       name="tokenId"
                       required
                     />
-                  </div>
+                  </div> */}
                   <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">
                       _pricePerNFT (uint256)(in WEI)
