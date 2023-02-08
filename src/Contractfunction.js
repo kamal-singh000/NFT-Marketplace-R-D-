@@ -259,12 +259,12 @@ const Contractfunction = () => {
       })
       .on("receipt", (receipt) => {
         console.log("complete", receipt);
-        setLoading4(false);
+        setLoading3(false);
         toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
       })
       .on("error", (error) => {
         console.log("error", error);
-        setLoading4(false);
+        setLoading3(false);
         toast.error("Transaction Failed");
       });
   };
@@ -329,7 +329,7 @@ const Contractfunction = () => {
               <div className="card-body">
                 <form onSubmit={submitNFTMinting}>
                   <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
                       uri (string)
                     </label>
                     <input
@@ -361,7 +361,7 @@ const Contractfunction = () => {
               <div className="card-body">
                 <form onSubmit={submitApprovalForAll}>
                   <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
                       operator (address)
                     </label>
                     <input
@@ -374,7 +374,10 @@ const Contractfunction = () => {
                     />
                   </div>
                   <div className="mb-3">
-                    <label for="exampleInputPassword1" className="form-label">
+                    <label
+                      htmlFor="exampleInputPassword1"
+                      className="form-label"
+                    >
                       approved (bool)
                     </label>
                     <input
@@ -405,7 +408,7 @@ const Contractfunction = () => {
               <div className="card-body">
                 <form onSubmit={submitNFTStaking}>
                   <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
                       _tokenIds (uint256[])
                     </label>
                     <input
@@ -418,7 +421,7 @@ const Contractfunction = () => {
                     />
                   </div>
                   <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
                       _nftCollection (address)
                     </label>
                     <input
@@ -449,7 +452,7 @@ const Contractfunction = () => {
               <div className="card-body">
                 <form onSubmit={buyNFT}>
                   <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
                       orderId
                     </label>
                     <input
@@ -462,7 +465,7 @@ const Contractfunction = () => {
                     />
                   </div>
                   <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
                       payAmount
                     </label>
                     <input
@@ -494,7 +497,7 @@ const Contractfunction = () => {
               <div className="card-body">
                 <form onSubmit={sellNFT}>
                   <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
                       _tokenId (uint256[])
                     </label>
                     <input
@@ -507,7 +510,7 @@ const Contractfunction = () => {
                     />
                   </div>
                   <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
                       _pricePerNFT (uint256)(in WEI)
                     </label>
                     <input
@@ -521,7 +524,7 @@ const Contractfunction = () => {
                   </div>
 
                   <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
                       _startTime (uint256)
                     </label>
                     <input
@@ -534,7 +537,7 @@ const Contractfunction = () => {
                     />
                   </div>
                   <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
                       _endTime (uint256)
                     </label>
                     <input
@@ -547,7 +550,7 @@ const Contractfunction = () => {
                     />
                   </div>
                   <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
                       _tokenIds (uint256[])
                     </label>
                     <input
@@ -560,7 +563,7 @@ const Contractfunction = () => {
                     />
                   </div>
                   <div className="mb-3">
-                    <label for="exampleInputEmail1" className="form-label">
+                    <label htmlFor="exampleInputEmail1" className="form-label">
                       _nftCollection (address)
                     </label>
                     <input
