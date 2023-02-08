@@ -14,6 +14,7 @@
 }
 .rowBG2 {
   background-color: rgba(47, 47, 74, 0.4);
+  border-radius: 25px;
 }
 
 input[type="text"],

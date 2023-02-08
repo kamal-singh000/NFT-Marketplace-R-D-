@@ -429,8 +429,8 @@ const Contractfunction = () => {
       />
       <div className="container-fluid text-start">
         <div className="row p-4">
-          <div className="col-8">
-            <div className="row rowBG2 rounded-3 p-2">
+          <div className="col-8 px-5">
+            <div className="row rowBG2 p-2">
               <div className="col-6 p-4">
                 <div className="card cardBG border-0">
                   <div className="card-header cardHeaderBG text-light">
@@ -795,11 +795,11 @@ const Contractfunction = () => {
               </div>
             </div>
           </div>
-          <div className="col-4">
+          <div className="col-4 rowBG2 py-4">
             <table class="table">
               <thead class="cardHeaderBG">
                 <tr>
-                  <th scope="col  text-center">Token ID</th>
+                  <th scope="col text-center">Token ID</th>
                   <th scope="col">Owner Address</th>
                 </tr>
               </thead>
