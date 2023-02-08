@@ -4,7 +4,7 @@ import Contractfunction from "./Contractfunction";
 
 function App() {
   return (
-    <div>
+    <div className="bgImg">
       <Contractfunction />
     </div>
   );
