@@ -218,7 +218,7 @@ const Contractfunction = () => {
     console.log("data3", ...obj);
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0xBd6E0F9223FA24F3483382bb809c2026f77488a8"
+      "0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB"
     );
     console.log("contractFunc", contractFunc);
     await contractFunc.methods
@@ -247,7 +247,7 @@ const Contractfunction = () => {
     console.log("data3", data.get("orderId"), data.get("payAmount"));
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0x4030f3481BF159906c8311bB0bC6560BB2c599f0"
+      "0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB"
     );
     console.log("contractFunc", contractFunc);
     await contractFunc.methods
@@ -282,7 +282,7 @@ const Contractfunction = () => {
       data.get("nftCollection")
     );
     let obj = await [
-      data.get("tokenId"),
+      // data.get("tokenId"),
       data.get("pricePerNFT"),
       dayjs(data.get("startTime")).unix(),
       dayjs(data.get("endTime")).unix(),
@@ -292,7 +292,7 @@ const Contractfunction = () => {
     console.log("data3", ...obj);
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0x4030f3481BF159906c8311bB0bC6560BB2c599f0"
+      "0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB"
     );
     console.log("contractFunc", contractFunc);
     await contractFunc.methods
@@ -496,7 +496,7 @@ const Contractfunction = () => {
               <div className="card-header">Sell NFT</div>
               <div className="card-body">
                 <form onSubmit={sellNFT}>
-                  <div className="mb-3">
+                  {/* <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">
                       _tokenId (uint256[])
                     </label>
@@ -508,7 +508,7 @@ const Contractfunction = () => {
                       name="tokenId"
                       required
                     />
-                  </div>
+                  </div> */}
                   <div className="mb-3">
                     <label htmlFor="exampleInputEmail1" className="form-label">
                       _pricePerNFT (uint256)(in WEI)

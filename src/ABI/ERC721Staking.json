@@ -161,7 +161,6 @@
   },
   {
     "inputs": [
-      { "internalType": "uint256", "name": "_tokenId", "type": "uint256" },
       { "internalType": "uint256", "name": "_pricePerNFT", "type": "uint256" },
       { "internalType": "uint256", "name": "_startTime", "type": "uint256" },
       { "internalType": "uint256", "name": "_endTime", "type": "uint256" },
