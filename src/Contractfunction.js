@@ -356,7 +356,9 @@ const Contractfunction = () => {
         <div className="row mt-5">
           <div className="col-4 p-4">
             <div className="card">
-              <div className="card-header">NFT Minting</div>
+              <div className="card-header bg-secondary text-light">
+                NFT Minting
+              </div>
               <div className="card-body">
                 <form onSubmit={submitNFTMinting}>
                   <div className="mb-3">
@@ -388,7 +390,9 @@ const Contractfunction = () => {
           </div>
           <div className="col-4 p-4">
             <div className="card">
-              <div className="card-header">Set Approval For All</div>
+              <div className="card-header bg-secondary text-light">
+                Set Approval For All
+              </div>
               <div className="card-body">
                 <form onSubmit={submitApprovalForAll}>
                   <div className="mb-3">
@@ -435,7 +439,9 @@ const Contractfunction = () => {
           </div>
           <div className="col-4 p-4">
             <div className="card">
-              <div className="card-header">Stake NFT</div>
+              <div className="card-header bg-secondary text-light">
+                Stake NFT
+              </div>
               <div className="card-body">
                 <form onSubmit={submitNFTStaking}>
                   <div className="mb-3">
@@ -479,7 +485,9 @@ const Contractfunction = () => {
           </div>
           <div className="col-4 p-4">
             <div className="card">
-              <div className="card-header">Approve Allowance</div>
+              <div className="card-header bg-secondary text-light">
+                Approve Allowance
+              </div>
               <div className="card-body">
                 <form onSubmit={approveAllowance}>
                   <div className="mb-3">
@@ -524,7 +532,7 @@ const Contractfunction = () => {
           </div>
           <div className="col-4 p-4">
             <div className="card">
-              <div className="card-header">Buy NFT</div>
+              <div className="card-header bg-secondary text-light">Buy NFT</div>
               <div className="card-body">
                 <form onSubmit={buyNFT}>
                   <div className="mb-3">
@@ -569,7 +577,9 @@ const Contractfunction = () => {
           </div>
           <div className="col-4 p-4">
             <div className="card">
-              <div className="card-header">Sell NFT</div>
+              <div className="card-header bg-secondary text-light">
+                Sell NFT
+              </div>
               <div className="card-body">
                 <form onSubmit={sellNFT}>
                   {/* <div className="mb-3">
