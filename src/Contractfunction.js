@@ -430,7 +430,7 @@ const Contractfunction = () => {
       <div className="container-fluid text-start">
         <div className="row p-4">
           <div className="col-8">
-            <div className="row rowBG rounded-3 p-2">
+            <div className="row rowBG2 rounded-3 p-2">
               <div className="col-6 p-4">
                 <div className="card cardBG border-0">
                   <div className="card-header cardHeaderBG text-light">
