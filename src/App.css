@@ -1,38 +1,24 @@
-.App {
-  text-align: center;
+.bgImg {
+  background-image: url("./assets/cover-bg.jpg");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+.cardBG {
+  background-color: rgba(47, 47, 74, 0.4);
+  color: rgb(183, 190, 195);
+}
+.cardHeaderBG {
+  background-color: rgba(25, 54, 84, 1);
+  color: rgb(183, 190, 195);
+}
+.rowBG2 {
+  background-color: rgba(47, 47, 74, 0.4);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+input[type="text"],
+input[type="number"],
+input[type="datetime-local"] {
+  background-color: rgba(47, 47, 74, 0.4);
+  color: rgb(183, 190, 195);
 }

@@ -4,7 +4,7 @@ const Header = (props) => {
   const { isConnect, account, connectWallet, disConnectWallet } = props;
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-dark">
+      <nav className="navbar navbar-expand-lg cardHeaderBG">
         <div className="container">
           <a className="navbar-brand fs-1 text-white" href="#">
             NFT Marketplace (R&D)
