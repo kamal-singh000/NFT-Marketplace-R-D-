@@ -804,7 +804,6 @@ const Contractfunction = () => {
                 </tr>
               </thead>
               <tbody className="text-light">
-                {console.log(ownerList)}
                 {ownerList.length > 0
                   ? ownerList.map((owner, key) => (
                       <tr key={key}>
