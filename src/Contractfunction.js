@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import NFTFunc from "./ABI/DODONFT.json";
 import NFTStakeFunc from "./ABI/ERC721Escrow.json";
 import MDToken from "./ABI/MDToken.json";
+import NFTListLoader from "./assets/loadernftlist.gif";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 let web3Modal = new Web3Modal({
@@ -37,7 +38,7 @@ const Contractfunction = () => {
   const [error, setError] = useState("");
   const [chainId, setChainId] = useState();
   const [isConnect, setConnect] = useState(false);
-  const [balance, setBalance] = useState("-");
+  const [NFTLoadingList, setNFTLoadingList] = useState(true);
   const [loading1, setLoading1] = useState(false);
   const [loading2, setLoading2] = useState(false);
   const [loading3, setLoading3] = useState(false);
@@ -57,7 +58,6 @@ const Contractfunction = () => {
       const network = await library.getNetwork();
       let accBalance = await signer.getBalance();
       accBalance = ethers.utils.formatEther(accBalance);
-      setBalance(accBalance);
       setProvider(provider);
       setSigner(signer);
       if (accounts) {
@@ -74,7 +74,6 @@ const Contractfunction = () => {
   const refreshState = async () => {
     setAccount();
     setChainId();
-    setBalance();
   };
   useEffect(() => {
     (async () => {
@@ -159,9 +158,11 @@ const Contractfunction = () => {
   useEffect(() => {
     tokenOwner();
     OrderId();
-  }, []);
+  }, [account]);
   const tokenOwner = async () => {
     let obj = [];
+    await setOwnerList([]);
+    await setNFTLoadingList(true);
     let contractFunc = await new web3.eth.Contract(
       NFTFunc,
       "0xCCC6a1C8a4F4F17C07A7809f12cE8fB12506A022"
@@ -169,10 +170,13 @@ const Contractfunction = () => {
     let res = await contractFunc.methods.totalSupply().call();
     for (let i = 0; i < res; i++) {
       const owner = await contractFunc.methods.ownerOf(i).call();
-      obj.push({ TokenID: i, address: owner });
-      console.log("TokenID", i, "Owner", owner, "res", res);
+      if (owner == account) {
+        obj.push({ TokenID: i, address: owner });
+        console.log("TokenID", i, "Owner", owner, "res", res);
+      }
     }
     await setOwnerList(obj);
+    await setNFTLoadingList(false);
     // placeOrders();
   };
   const OrderId = async () => {
@@ -389,6 +393,7 @@ const Contractfunction = () => {
           setLoading4(false);
           toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
           tokenOwner();
+          OrderId();
         });
       // .on("error", (error) => {
       //   console.log("error", error);
@@ -470,7 +475,7 @@ const Contractfunction = () => {
         connectWallet={connectWallet}
         disConnectWallet={disConnectWallet}
       />
-      <div className="row p-4">
+      <div className="container-fluid row p-4">
         <div className="col-4">
           <div className="card cardBG border border-success">
             <div className="card-header cardHeaderBG text-light">
@@ -694,50 +699,61 @@ const Contractfunction = () => {
             </thead>
             <tbody className="text-light">
               {console.log(ownerList)}
-              {ownerList.length > 0
-                ? ownerList.map((owner, key) =>
-                    owner.address == account ? (
-                      <tr key={key}>
-                        <td className=" text-center">{owner.TokenID}</td>
-                        <td>{owner.address}</td>
-                        {/* <td>
-                          <button
-                            type="submit"
-                            disabled={loading1}
-                            className="btn btn-primary"
-                            onClick={() => setToken_id(owner.TokenID)}
-                          >
-                            TokenID
-                          </button>
-                        </td> */}
-                      </tr>
-                    ) : (
-                      ""
-                    )
-                  )
-                : ""}
+              {ownerList.length > 0 ? (
+                ownerList.map((owner, key) => (
+                  <tr key={key}>
+                    <td className=" text-center">{owner.TokenID}</td>
+                    <td>{owner.address}</td>
+                  </tr>
+                ))
+              ) : NFTLoadingList ? (
+                <td colSpan={2} className="text-center">
+                  <img
+                    src={"https://media.tenor.com/6tl1LLJfSWgAAAAi/loader.gif"}
+                    alt="loader"
+                  />
+                  <br />
+                  <div
+                    className="fs-3 fw-bold"
+                    style={{ color: "rgba(0, 102, 204,0.8)" }}
+                  >
+                    Loading...
+                  </div>
+                </td>
+              ) : (
+                <td colSpan={2} className="text-center">
+                  <div
+                    className="fs-1 fw-bold"
+                    style={{ color: "rgb(25, 54, 84)" }}
+                  >
+                    {" "}
+                    No List Found{" "}
+                  </div>
+                </td>
+              )}
             </tbody>
           </table>
         </div>
-        <div className="col-12">
-          <table class="table">
+        <div className=" col-12">
+          <table class="container-fluid table border border-success text-center">
             <thead class="cardHeaderBG">
               <tr>
-                <th scope="col  text-center">Order</th>
+                <th scope="col">Order</th>
                 <th scope="col">Seller</th>
                 <th scope="col">pricePerNFT</th>
                 <th scope="col">TokenID</th>
-                <th scope="col">Action</th>
+                <th scope="col">BUY Action</th>
+                <th scope="col">CLAIM Action</th>
               </tr>
             </thead>
-            <tbody className="text-light">
+            <tbody className="cardBG">
               {console.log(nfts)}
               {nfts.length > 0
                 ? nfts.map((owner, key) =>
                     owner.seller !=
                     "0x0000000000000000000000000000000000000000" ? (
                       <tr key={key}>
-                        <td className=" text-center">{key + 1}</td>
+                        <td className="">{key + 1}</td>
                         <td>{owner.seller}</td>
                         <td>
                           {web3.utils.fromWei(owner.pricePerNFT, "ether")} BNB
@@ -754,10 +770,12 @@ const Contractfunction = () => {
                           >
                             buyNFT
                           </button>
+                        </td>
+                        <td>
                           <button
                             type="submit"
                             disabled={loading1}
-                            className="btn btn-primary text-center m-2"
+                            className="btn btn-primary text-center"
                             onClick={() => claimBack(key + 1)}
                           >
                             claimBack

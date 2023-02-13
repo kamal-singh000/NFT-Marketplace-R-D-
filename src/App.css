@@ -1,7 +1,7 @@
 .bgImg {
   background-image: url("./assets/cover-bg.jpg");
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-attachment: contain;
   background-size: cover;
 }
 .cardBG {
@@ -29,4 +29,22 @@ input[type="number"]:focus,
 input[type="datetime-local"]:focus {
   background-color: rgba(47, 47, 74, 0.8);
   color: rgb(183, 190, 195);
+}
+
+.loader {
+  position: relative;
+  text-align: center;
+  padding: 30px 0;
+  filter: drop-shadow(0 0 30px var(--primary));
+}
+.loader:active {
+  content: "Loading";
+  display: inline-block;
+  vertical-align: top;
+  width: 128px;
+  height: 128px;
+  border: 12px solid var(--primary);
+  border-right: 12px solid transparent;
+  border-radius: 100%;
+  animation: rotation 2s linear 0s infinite;
 }
