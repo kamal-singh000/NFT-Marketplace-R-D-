@@ -179,19 +179,20 @@ const Contractfunction = () => {
     let obj = [];
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB"
+      "0x31D23B721AB7d3304dc675E55280145b95250FFd"
     );
     let res = await contractFunc.methods.orderNonce().call();
-    for (let i = 0; i < res; i++) {
-      const owner = await contractFunc.methods.order(i).call();
-      console.log("escrowww", owner);
-      obj.push({
-        TokenID: owner.tokenId,
-        seller: owner.seller,
-        pricePerNFT: owner.pricePerNFT,
-        endTime: owner.endTime,
-      });
-    }
+    if (res >= 1)
+      for (let i = 1; i <= res; i++) {
+        const owner = await contractFunc.methods.order(i).call();
+        console.log("escrowww", owner);
+        obj.push({
+          TokenID: owner.tokenId,
+          seller: owner.seller,
+          pricePerNFT: owner.pricePerNFT,
+          endTime: owner.endTime,
+        });
+      }
     await setNfts(obj);
     console.log("demo", obj);
   };
@@ -200,7 +201,7 @@ const Contractfunction = () => {
   //   let obj = [];
   //   ownerList.length > 0 &&
   //     ownerList.map(async (res) => {
-  //       if (res.address == "0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB") {
+  //       if (res.address == "0x31D23B721AB7d3304dc675E55280145b95250FFd") {
   // let contractFunc = await new web3.eth.Contract(
   //   NFTFunc,
   //   "0xCCC6a1C8a4F4F17C07A7809f12cE8fB12506A022"
@@ -268,7 +269,7 @@ const Contractfunction = () => {
         "0xCCC6a1C8a4F4F17C07A7809f12cE8fB12506A022"
       );
       await contractFunc.methods
-        .setApprovalForAll("0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB", true)
+        .setApprovalForAll("0x31D23B721AB7d3304dc675E55280145b95250FFd", true)
         .send({ from: account })
         .on("transactionHash", (hash) => {
           console.log("progress", hash);
@@ -302,7 +303,7 @@ const Contractfunction = () => {
       console.log("data3", ...obj);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB"
+        "0x31D23B721AB7d3304dc675E55280145b95250FFd"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
@@ -343,7 +344,7 @@ const Contractfunction = () => {
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
-        .approve("0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB", payAmount)
+        .approve("0x31D23B721AB7d3304dc675E55280145b95250FFd", payAmount)
         .send({ from: account })
         .on("transactionHash", (hash) => {
           console.log("progress", hash);
@@ -353,7 +354,7 @@ const Contractfunction = () => {
           console.log("complete", receipt);
           setLoading6(false);
           // toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
-          buyNFT(orderId, payAmount);
+          buyNFT(orderId);
           tokenOwner();
         });
       // .on("error", (error) => {
@@ -367,17 +368,17 @@ const Contractfunction = () => {
     }
   };
 
-  const buyNFT = async (orderId, payAmount) => {
+  const buyNFT = async (orderId) => {
     try {
       // e.preventDefault();
       setLoading4(true);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB"
+        "0x31D23B721AB7d3304dc675E55280145b95250FFd"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
-        .buyNowPayment(orderId, payAmount)
+        .buyNowPayment(orderId)
         .send({ from: account })
         .on("transactionHash", (hash) => {
           console.log("progress", hash);
@@ -406,7 +407,7 @@ const Contractfunction = () => {
       console.log("data3", ...obj);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0x6f0477AC6aB1715BbDab068c7BD55aF7E9523cCB"
+        "0x31D23B721AB7d3304dc675E55280145b95250FFd"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
@@ -428,6 +429,34 @@ const Contractfunction = () => {
       //   toast.error("Transaction Failed");
       //   setLoading5(false);
       // });
+    } catch (error) {
+      toast.error("Transaction Failed!");
+      setLoading5(false);
+    }
+  };
+  const claimBack = async (orderId, e) => {
+    try {
+      e.preventDefault();
+      setLoading5(true);
+      let contractFunc = await new web3.eth.Contract(
+        NFTStakeFunc,
+        "0x31D23B721AB7d3304dc675E55280145b95250FFd"
+      );
+      console.log("contractFunc", contractFunc);
+      await contractFunc.methods
+        .claimBack(orderId)
+        .send({ from: account })
+        .on("transactionHash", (hash) => {
+          console.log("progress", hash);
+          toast.info("Transaction is Processing...");
+        })
+        .on("receipt", (receipt) => {
+          console.log("complete", receipt);
+          setLoading5(false);
+          toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
+          tokenOwner();
+          OrderId();
+        });
     } catch (error) {
       toast.error("Transaction Failed!");
       setLoading5(false);
@@ -722,6 +751,14 @@ const Contractfunction = () => {
                           }
                         >
                           buyNFT
+                        </button>
+                        <button
+                          type="submit"
+                          disabled={loading1}
+                          className="btn btn-primary text-center m-2"
+                          onClick={() => claimBack(key + 1)}
+                        >
+                          claimBack
                         </button>
                       </td>
                     </tr>
