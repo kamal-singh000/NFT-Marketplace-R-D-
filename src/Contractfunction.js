@@ -45,6 +45,7 @@ const Contractfunction = () => {
   const [loading4, setLoading4] = useState(false);
   const [loading5, setLoading5] = useState(false);
   const [loading6, setLoading6] = useState(false);
+  const [loading7, setLoading7] = useState(false);
   const [ownerList, setOwnerList] = useState([]);
   const [token_id, setToken_id] = useState();
   const [nfts, setNfts] = useState([]);
@@ -439,10 +440,9 @@ const Contractfunction = () => {
       setLoading5(false);
     }
   };
-  const claimBack = async (orderId, e) => {
+  const claimBack = async (orderId) => {
     try {
-      e.preventDefault();
-      setLoading5(true);
+      setLoading7(true);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
         "0x31D23B721AB7d3304dc675E55280145b95250FFd"
@@ -457,14 +457,14 @@ const Contractfunction = () => {
         })
         .on("receipt", (receipt) => {
           console.log("complete", receipt);
-          setLoading5(false);
+          setLoading7(false);
           toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
           tokenOwner();
           OrderId();
         });
     } catch (error) {
       toast.error("Transaction Failed!");
-      setLoading5(false);
+      setLoading7(false);
     }
   };
   return (
