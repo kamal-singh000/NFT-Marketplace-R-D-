@@ -4,6 +4,9 @@ import Web3Modal from "web3modal";
 import Header from "./Header";
 import Web3 from "web3";
 import dayjs from "dayjs";
+import axios from "axios";
+import copy from "copy-to-clipboard";
+import { RiFileCopy2Line } from "react-icons/ri";
 import NFTFunc from "./ABI/DODONFT.json";
 import NFTStakeFunc from "./ABI/ERC721Escrow.json";
 import MDToken from "./ABI/MDToken.json";
@@ -49,6 +52,26 @@ const Contractfunction = () => {
   const [ownerList, setOwnerList] = useState([]);
   const [token_id, setToken_id] = useState();
   const [nfts, setNfts] = useState([]);
+  const [NFTDetails, setNFTDetails] = useState([]);
+  function compactDetail(stringValue) {
+    const newStringValue = stringValue;
+    if (stringValue) {
+      const res =
+        newStringValue.substring(0, 4) +
+        "..." +
+        newStringValue.substring(
+          newStringValue.length - 4,
+          newStringValue.length
+        );
+      return res;
+    }
+  }
+
+  const copyToClipboard = (address) => {
+    copy(address);
+    return toast.success(`${"Copied to Clipboard!"}`);
+  };
+
   const connectWallet = async () => {
     try {
       const provider = await web3Modal.connect("walletconnect");
@@ -157,9 +180,30 @@ const Contractfunction = () => {
   }, [provider]);
 
   useEffect(() => {
-    tokenOwner();
-    OrderId();
+    if (account) {
+      tokenOwner();
+      OrderId();
+      getTokenDetails();
+    }
   }, [account]);
+
+  const getTokenDetails = async () => {
+    let response = await axios.get(
+      `https://deep-index.moralis.io/api/v2/${account}/nft?chain=0x61`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key":
+            "Ayi9BO2JmXKMepqQBBS4rSQUFvHNc2A82sYE1Bd0S1tjVLoBbIbXmpBYSxncEkiw",
+        },
+      }
+    );
+    if (response.status === 200) {
+      console.log("response.data.result : ", response.data.result);
+      setNFTDetails(response.data.result);
+    }
+  };
+
   const tokenOwner = async () => {
     let obj = [];
     await setOwnerList([]);
@@ -173,7 +217,7 @@ const Contractfunction = () => {
       const owner = await contractFunc.methods.ownerOf(i).call();
       if (owner == account) {
         obj.push({ TokenID: i, address: owner });
-        console.log("TokenID", i, "Owner", owner, "res", res);
+        // console.log("TokenID", i, "Owner", owner, "res", res);
       }
     }
     await setOwnerList(obj);
@@ -720,6 +764,53 @@ const Contractfunction = () => {
                     Loading...
                   </div>
                 </td>
+              ) : (
+                <td colSpan={2} className="text-center">
+                  <div
+                    className="fs-1 fw-bold"
+                    style={{ color: "rgb(25, 54, 84)" }}
+                  >
+                    {" "}
+                    No List Found{" "}
+                  </div>
+                </td>
+              )}
+            </tbody>
+          </table>
+          <table class="table ">
+            <thead class="cardHeaderBG">
+              <tr>
+                <th scope="col  text-center">Token ID</th>
+                <th scope="col">Token Address</th>
+                <th scope="col">Token URI</th>
+              </tr>
+            </thead>
+            <tbody
+              className="text-light cardBG overflow"
+              style={{ height: "100px" }}
+            >
+              {console.log(ownerList)}
+              {NFTDetails.length > 0 ? (
+                NFTDetails.map((NFT, key) => (
+                  <tr key={key}>
+                    <td className=" text-center">{NFT?.token_id}</td>
+                    <td>
+                      <span
+                        style={{ cursor: "pointer" }}
+                        onClick={() => copyToClipboard(NFT?.token_address)}
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="Click to copy clipboard"
+                      >
+                        {compactDetail(NFT?.token_address)}
+                        {/* <RiFileCopy2Line /> */}
+                      </span>
+                    </td>
+                    <td className="text-break">
+                      {NFT?.token_uri ? NFT?.token_uri : "NULL"}
+                    </td>
+                  </tr>
+                ))
               ) : (
                 <td colSpan={2} className="text-center">
                   <div
