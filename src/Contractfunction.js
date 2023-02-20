@@ -213,7 +213,7 @@ const Contractfunction = () => {
     let obj = [];
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71"
+      "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227"
     );
     let res = await contractFunc.methods.orderNonce().call();
     if (res >= 1)
@@ -235,7 +235,7 @@ const Contractfunction = () => {
   //   let obj = [];
   //   ownerList.length > 0 &&
   //     ownerList.map(async (res) => {
-  //       if (res.address == "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71") {
+  //       if (res.address == "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227") {
   // let contractFunc = await new web3.eth.Contract(
   //   NFTFunc,
   //   "0xCCC6a1C8a4F4F17C07A7809f12cE8fB12506A022"
@@ -311,7 +311,7 @@ const Contractfunction = () => {
         "0xCCC6a1C8a4F4F17C07A7809f12cE8fB12506A022"
       );
       await contractFunc.methods
-        .setApprovalForAll("0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71", true)
+        .setApprovalForAll("0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227", true)
         .send({ from: account })
         .on("transactionHash", (hash) => {
           console.log("progress", hash);
@@ -345,7 +345,7 @@ const Contractfunction = () => {
       console.log("data3", ...obj);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71"
+        "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
@@ -386,7 +386,7 @@ const Contractfunction = () => {
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
-        .approve("0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71", payAmount)
+        .approve("0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227", payAmount)
         .send({ from: account })
         .on("transactionHash", (hash) => {
           console.log("progress", hash);
@@ -416,7 +416,7 @@ const Contractfunction = () => {
       setLoading4(true);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71"
+        "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
@@ -443,14 +443,13 @@ const Contractfunction = () => {
       toast.error("Transaction Failed!");
     }
   };
-  const sellNFT = async (obj, e) => {
+  const sellNFT = async (obj) => {
     try {
-      e.preventDefault();
       setLoading5(true);
       console.log("data3", ...obj);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71"
+        "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
@@ -483,7 +482,7 @@ const Contractfunction = () => {
       setLoading5(true);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71"
+        "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
@@ -520,7 +519,7 @@ const Contractfunction = () => {
       console.log("data3", ...obj);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71"
+        "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
