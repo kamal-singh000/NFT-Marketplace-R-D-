@@ -213,7 +213,7 @@ const Contractfunction = () => {
     let obj = [];
     let contractFunc = await new web3.eth.Contract(
       NFTStakeFunc,
-      "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71"
+      "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227"
     );
     let res = await contractFunc.methods.orderNonce().call();
     if (res >= 1)
@@ -225,6 +225,7 @@ const Contractfunction = () => {
           seller: owner.seller,
           pricePerNFT: owner.pricePerNFT,
           endTime: owner.endTime,
+          edition: owner.amount,
         });
       }
     await setNfts(obj);
@@ -235,7 +236,7 @@ const Contractfunction = () => {
   //   let obj = [];
   //   ownerList.length > 0 &&
   //     ownerList.map(async (res) => {
-  //       if (res.address == "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71") {
+  //       if (res.address == "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227") {
   // let contractFunc = await new web3.eth.Contract(
   //   NFTFunc,
   //   "0xCCC6a1C8a4F4F17C07A7809f12cE8fB12506A022"
@@ -311,7 +312,7 @@ const Contractfunction = () => {
         "0xCCC6a1C8a4F4F17C07A7809f12cE8fB12506A022"
       );
       await contractFunc.methods
-        .setApprovalForAll("0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71", true)
+        .setApprovalForAll("0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227", true)
         .send({ from: account })
         .on("transactionHash", (hash) => {
           console.log("progress", hash);
@@ -345,7 +346,7 @@ const Contractfunction = () => {
       console.log("data3", ...obj);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71"
+        "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
@@ -372,7 +373,7 @@ const Contractfunction = () => {
     }
   };
 
-  const approveAllowance = async (orderId, payAmount, e) => {
+  const approveAllowance = async (orderId, edition, payAmount, e) => {
     try {
       // e.preventDefault();
       setLoading6(true);
@@ -386,7 +387,7 @@ const Contractfunction = () => {
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
-        .approve("0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71", payAmount)
+        .approve("0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227", payAmount)
         .send({ from: account })
         .on("transactionHash", (hash) => {
           console.log("progress", hash);
@@ -396,7 +397,7 @@ const Contractfunction = () => {
           console.log("complete", receipt);
           setLoading6(false);
           // toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
-          buyNFT(orderId);
+          buyNFT(payAmount, orderId, edition);
           tokenOwner();
         });
       // .on("error", (error) => {
@@ -410,17 +411,18 @@ const Contractfunction = () => {
     }
   };
 
-  const buyNFT = async (orderId) => {
+  const buyNFT = async (payAmount, orderId, edition) => {
+    console.log("buyNFT", orderId, edition, payAmount);
     try {
       // e.preventDefault();
       setLoading4(true);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71"
+        "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
-        .buyNowPayment(orderId)
+        .buyNow(payAmount, orderId, edition)
         .send({ from: account })
         .on("transactionHash", (hash) => {
           console.log("progress", hash);
@@ -450,7 +452,7 @@ const Contractfunction = () => {
       console.log("data3", ...obj);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71"
+        "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
@@ -483,7 +485,7 @@ const Contractfunction = () => {
       setLoading5(true);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71"
+        "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
@@ -520,7 +522,7 @@ const Contractfunction = () => {
       console.log("data3", ...obj);
       let contractFunc = await new web3.eth.Contract(
         NFTStakeFunc,
-        "0xd90f28cccD7836A745E2D3EAc13f7300bBc3Cc71"
+        "0xaA78CD988fFe8eF4cF99455DeDAd463bcf919227"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
@@ -917,6 +919,7 @@ const Contractfunction = () => {
             <thead class="cardHeaderBG">
               <tr>
                 <th scope="col">Order</th>
+                <th scope="col">Edition</th>
                 <th scope="col">Seller</th>
                 <th scope="col">pricePerNFT</th>
                 <th scope="col">TokenID</th>
@@ -932,6 +935,7 @@ const Contractfunction = () => {
                     "0x0000000000000000000000000000000000000000" ? (
                       <tr key={key}>
                         <td className="">{key + 1}</td>
+                        <td className="">{owner.edition}</td>
                         <td>{owner.seller}</td>
                         <td>
                           {web3.utils.fromWei(owner.pricePerNFT, "ether")} BNB
@@ -943,7 +947,11 @@ const Contractfunction = () => {
                             disabled={loading1}
                             className="btn btn-primary"
                             onClick={() =>
-                              approveAllowance(key + 1, owner.pricePerNFT)
+                              approveAllowance(
+                                key + 1,
+                                owner.edition,
+                                owner.pricePerNFT
+                              )
                             }
                           >
                             buyNFT
@@ -954,7 +962,7 @@ const Contractfunction = () => {
                             type="submit"
                             disabled={loading1}
                             className="btn btn-primary text-center"
-                            onClick={() => claimBack(key + 1)}
+                            onClick={() => claimBack(key + 1, owner.edition)}
                           >
                             claimBack
                           </button>
