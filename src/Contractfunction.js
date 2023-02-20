@@ -10,6 +10,9 @@ import MDToken from "./ABI/MDToken.json";
 import NFTListLoader from "./assets/loadernftlist.gif";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
+import copy from "copy-to-clipboard";
+
 let web3Modal = new Web3Modal({
   network: "testnet",
   cacheProvider: true,
@@ -48,6 +51,13 @@ const Contractfunction = () => {
   const [ownerList, setOwnerList] = useState([]);
   const [token_id, setToken_id] = useState();
   const [nfts, setNfts] = useState([]);
+  const [NFTDetails, setNFTDetails] = useState([]);
+
+  const copyToClipboard = (address) => {
+    copy(address);
+    return toast.success(`${"Copied to Clipboard!"}`);
+  };
+
   const connectWallet = async () => {
     try {
       const provider = await web3Modal.connect("walletconnect");
@@ -158,7 +168,26 @@ const Contractfunction = () => {
   useEffect(() => {
     tokenOwner();
     OrderId();
+    getTokenDetails();
   }, [account]);
+
+  const getTokenDetails = async () => {
+    let response = await axios.get(
+      `https://deep-index.moralis.io/api/v2/${account}/nft?chain=0x61`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "x-api-key":
+            "Ayi9BO2JmXKMepqQBBS4rSQUFvHNc2A82sYE1Bd0S1tjVLoBbIbXmpBYSxncEkiw",
+        },
+      }
+    );
+    if (response.status === 200) {
+      console.log("response.data.result : ", response.data.result);
+      setNFTDetails(response.data.result);
+    }
+  };
+
   const tokenOwner = async () => {
     let obj = [];
     await setOwnerList([]);
@@ -244,6 +273,7 @@ const Contractfunction = () => {
           setLoading1(false);
           toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
           tokenOwner();
+          getTokenDetails();
         });
       // .on("error", (error) => {
       //   console.log("error", error);
@@ -935,6 +965,57 @@ const Contractfunction = () => {
                     )
                   )
                 : ""}
+            </tbody>
+          </table>
+        </div>
+        {/*  */}
+        <div style={{ borderTop: "1px solid white", margin: "15px" }}></div>
+        <div className="col-12">
+          <table class="table ">
+            <thead class="cardHeaderBG">
+              <tr>
+                <th scope="col  text-center">Token ID</th>
+                <th scope="col">Token Address</th>
+                <th scope="col">Token URI</th>
+              </tr>
+            </thead>
+            <tbody
+              className="text-light cardBG overflow"
+              style={{ height: "100px" }}
+            >
+              {console.log(ownerList)}
+              {NFTDetails.length > 0 ? (
+                NFTDetails.map((NFT, key) => (
+                  <tr key={key}>
+                    <td className=" text-center">{NFT?.token_id}</td>
+                    <td>
+                      <span
+                        style={{ cursor: "pointer" }}
+                        onClick={() => copyToClipboard(NFT?.token_address)}
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-title="Click to copy clipboard"
+                      >
+                        {NFT?.token_address}
+                        {/* <RiFileCopy2Line /> */}
+                      </span>
+                    </td>
+                    <td className="text-break">
+                      {NFT?.token_uri ? NFT?.token_uri : "NULL"}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <td colSpan={2} className="text-center">
+                  <div
+                    className="fs-1 fw-bold"
+                    style={{ color: "rgb(25, 54, 84)" }}
+                  >
+                    {" "}
+                    No List Found{" "}
+                  </div>
+                </td>
+              )}
             </tbody>
           </table>
         </div>
