@@ -586,7 +586,7 @@ const Contractfunction = () => {
                   </tr>
                 ))
               ) : (
-                <td colSpan={2} className="text-center">
+                <td colSpan={3} className="text-center">
                   <div
                     className="fs-1 fw-bold"
                     style={{ color: "rgb(25, 54, 84)" }}
@@ -646,7 +646,7 @@ const Contractfunction = () => {
             </tbody>
           </table>
         </div> */}
-        <div style={{ borderTop: "3px solid white", margin: "15px" }}></div>
+        <div style={{ borderTop: "3px solid white", margin: "15px 0" }}></div>
         <div className="col-6">
           <div className="card cardBG border border-success">
             <div className="card-header cardHeaderBG text-light">
@@ -960,7 +960,7 @@ const Contractfunction = () => {
           </div>
         </div>
 
-        <div style={{ borderTop: "1px solid white", margin: "15px" }}></div>
+        <div style={{ borderTop: "1px solid white", margin: "15px 0" }}></div>
         <div className=" col-12">
           <table class="container-fluid table border border-success text-center">
             <thead class="cardHeaderBG">
@@ -1018,7 +1018,7 @@ const Contractfunction = () => {
           </table>
         </div>
         {/*  */}
-        <div style={{ borderTop: "1px solid white", margin: "15px" }}></div>
+        {/* <div style={{ borderTop: "1px solid white", margin: "15px 0" }}></div> */}
       </div>
       <ToastContainer
         position="top-right"
