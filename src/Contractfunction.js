@@ -769,7 +769,12 @@ const Contractfunction = () => {
               </form>
             </div>
           </div>
-          <div className="card cardBG border border-success mt-4">
+        </div>
+        {/* <div className="col-6"> */}
+
+        {/* </div> */}
+        <div className="col-6">
+          <div className="card cardBG border border-success">
             <div className="card-header cardHeaderBG text-light">
               BUY NFT Token
             </div>
@@ -827,12 +832,7 @@ const Contractfunction = () => {
               </form>
             </div>
           </div>
-        </div>
-        {/* <div className="col-6"> */}
-
-        {/* </div> */}
-        <div className="col-6">
-          <div className="card cardBG border border-success">
+          {/* <div className="card cardBG border border-success">
             <div className="card-header cardHeaderBG text-light">Sell NFT</div>
             <div className="card-body  bg-transparent ">
               <form onSubmit={submitApprovalForAll}>
@@ -953,7 +953,7 @@ const Contractfunction = () => {
                     name="nftCollection"
                     required
                   />
-                </div> */}
+                </div>
 
                 <div className="d-grid gap-2">
                   <button
@@ -966,7 +966,7 @@ const Contractfunction = () => {
                 </div>
               </form>
             </div>
-          </div>
+          </div> */}
           <div className="card cardBG border mt-4 border-success">
             <div className="card-header cardHeaderBG text-light">
               Place SecondHand Order
