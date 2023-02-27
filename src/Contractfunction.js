@@ -166,7 +166,6 @@ const Contractfunction = () => {
   }, [provider]);
 
   useEffect(() => {
-    tokenOwner();
     OrderId();
     getTokenDetails();
   }, [account]);
@@ -190,26 +189,6 @@ const Contractfunction = () => {
     }
   };
 
-  const tokenOwner = async () => {
-    // let obj = [];
-    // await setOwnerList([]);
-    // await setNFTLoadingList(true);
-    // let contractFunc = await new web3.eth.Contract(
-    //   NFTFunc,
-    //   "0xD4531a65A75D33De25D3B8e40da9d88939cd5CeA"
-    // );
-    // let res = await contractFunc.methods.tokenId().call();
-    // for (let i = 0; i < res; i++) {
-    //   const owner = await contractFunc.methods.ownerOfToken(i).call();
-    //   const tokenUri = await contractFunc.methods.tokenURI(i).call();
-    //   if (owner == account) {
-    //     obj.push({ TokenID: i, address: owner, tokenUri: tokenUri });
-    //     console.log("TokenID", i, "Owner", owner, "uri", tokenUri);
-    //   }
-    // }
-    // await setOwnerList(obj);
-    // await setNFTLoadingList(false);
-  };
   const OrderId = async () => {
     let obj = [];
     let contractFunc = await new web3.eth.Contract(
@@ -267,7 +246,6 @@ const Contractfunction = () => {
           console.log("complete", receipt);
           setLoading1(false);
           toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
-          tokenOwner();
           getTokenDetails();
         });
     } catch (error) {
@@ -320,7 +298,6 @@ const Contractfunction = () => {
             console.log("complete", receipt);
 
             sellNFT(obj);
-            tokenOwner();
           });
       }
     } catch (error) {
@@ -333,23 +310,27 @@ const Contractfunction = () => {
   const approveAllowance = async (e) => {
     try {
       e.preventDefault();
-      setLoading6(true);
+      setLoading2(true);
       const data = new FormData(e.target);
       let payAmount = data.get("price");
-      let obj = await [data.get("orderNonce"), data.get("editionNumber")];
+      let obj = await [
+        data.get("price"),
+        data.get("orderNonce"),
+        data.get("editionNumber"),
+      ];
       // let orderId = data.get("orderId");
       console.log("data3", payAmount);
-      let contractFunc = await new web3.eth.Contract(
+      let mdtTokenFunc = await new web3.eth.Contract(
         MDToken,
         "0x510601cb8Db1fD794DCE6186078b27A5e2944Ad6"
       );
-      const approveStatus = await contractFunc.methods
+      const approveStatus = await mdtTokenFunc.methods
         .allowance(account, "0xd607728Ba4746B7309670863244f6E5743D80eAb")
         .call();
       console.log("approveStatus", approveStatus);
       console.log("MDTcontractFunc", payAmount);
       approveStatus < payAmount
-        ? await contractFunc.methods
+        ? await mdtTokenFunc.methods
             .approve("0xd607728Ba4746B7309670863244f6E5743D80eAb", payAmount)
             .send({ from: account })
             .on("transactionHash", (hash) => {
@@ -358,14 +339,13 @@ const Contractfunction = () => {
             })
             .on("receipt", (receipt) => {
               console.log("complete", receipt);
-              setLoading6(false);
+              setLoading2(false);
               // toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
               buyNFT(obj);
-              tokenOwner();
             })
         : buyNFT(obj);
     } catch (error) {
-      setLoading6(false);
+      setLoading2(false);
       console.log("Error: ", error);
       toast.error("Transaction Failed!");
     }
@@ -373,32 +353,56 @@ const Contractfunction = () => {
 
   const buyNFT = async (obj) => {
     try {
+      console.log("1", obj[0], "2", obj[1], "3", obj[2]);
       // e.preventDefault();
-      setLoading2(true);
+      // setLoading2(true);
       // const data = new FormData(e.target);
-      // let obj = await [data.get("orderNonce"), data.get("editionNumber")];
+      // let obj = await [
+      //   data.get("price"),
+      //   data.get("orderNonce"),
+      //   data.get("editionNumber"),
+      // ];
+
       let contractFunc = await new web3.eth.Contract(
         ERC1155Escrow,
         "0xd607728Ba4746B7309670863244f6E5743D80eAb"
       );
-      console.log("objjj", ...obj);
-      await contractFunc.methods
-        .buyNowToken(...obj)
-        .send({
-          from: account,
-          // value: data.get("price"),
-        })
-        .on("transactionHash", (hash) => {
-          console.log("progress", hash);
-          toast.info("Transaction is Processing...");
-        })
-        .on("receipt", (receipt) => {
-          console.log("complete", receipt);
-          setLoading2(false);
-          toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
-          tokenOwner();
-          OrderId();
-        });
+      const owner = await contractFunc.methods.order(obj[1]).call();
+      if (owner.paymentToken == "0x0000000000000000000000000000000000000000") {
+        await contractFunc.methods
+          .buyNow(obj[1], obj[2])
+          .send({
+            from: account,
+            value: obj[0],
+          })
+          .on("transactionHash", (hash) => {
+            console.log("progress", hash);
+            toast.info("Transaction is Processing...");
+          })
+          .on("receipt", (receipt) => {
+            console.log("complete", receipt);
+            toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
+
+            OrderId();
+          });
+      } else {
+        await contractFunc.methods
+          .buyNowToken(...obj)
+          .send({
+            from: account,
+          })
+          .on("transactionHash", (hash) => {
+            console.log("progress", hash);
+            toast.info("Transaction is Processing...");
+          })
+          .on("receipt", (receipt) => {
+            console.log("complete", receipt);
+            toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
+
+            OrderId();
+          });
+      }
+      setLoading2(false);
     } catch (error) {
       setLoading2(false);
       console.log("Error: ", error);
@@ -422,7 +426,7 @@ const Contractfunction = () => {
         .on("receipt", (receipt) => {
           console.log("complete", receipt);
           toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
-          tokenOwner();
+
           OrderId();
           setLoading3(false);
         });
@@ -452,7 +456,7 @@ const Contractfunction = () => {
           console.log("complete", receipt);
           setLoading5(false);
           toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
-          tokenOwner();
+
           OrderId();
         });
     } catch (error) {
@@ -490,7 +494,6 @@ const Contractfunction = () => {
           console.log("complete", receipt);
           setLoading4(false);
           toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
-          tokenOwner();
         });
     } catch (error) {
       setLoading4(false);
@@ -766,7 +769,12 @@ const Contractfunction = () => {
               </form>
             </div>
           </div>
-          <div className="card cardBG border border-success mt-4">
+        </div>
+        {/* <div className="col-6"> */}
+
+        {/* </div> */}
+        <div className="col-6">
+          <div className="card cardBG border border-success">
             <div className="card-header cardHeaderBG text-light">
               BUY NFT Token
             </div>
@@ -824,12 +832,7 @@ const Contractfunction = () => {
               </form>
             </div>
           </div>
-        </div>
-        {/* <div className="col-6"> */}
-
-        {/* </div> */}
-        <div className="col-6">
-          <div className="card cardBG border border-success">
+          {/* <div className="card cardBG border border-success">
             <div className="card-header cardHeaderBG text-light">Sell NFT</div>
             <div className="card-body  bg-transparent ">
               <form onSubmit={submitApprovalForAll}>
@@ -950,8 +953,7 @@ const Contractfunction = () => {
                     name="nftCollection"
                     required
                   />
-                </div> */}
-
+                </div>
                 <div className="d-grid gap-2">
                   <button
                     type="submit"
@@ -963,7 +965,7 @@ const Contractfunction = () => {
                 </div>
               </form>
             </div>
-          </div>
+          </div> */}
           <div className="card cardBG border mt-4 border-success">
             <div className="card-header cardHeaderBG text-light">
               Place SecondHand Order
