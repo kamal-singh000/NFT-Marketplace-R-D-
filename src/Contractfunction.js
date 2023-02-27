@@ -387,7 +387,7 @@ const Contractfunction = () => {
           });
       } else {
         await contractFunc.methods
-          .buyNowToken(...obj)
+          .buyNowToken(obj[1], obj[2])
           .send({
             from: account,
           })
