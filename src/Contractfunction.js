@@ -193,7 +193,7 @@ const Contractfunction = () => {
     let obj = [];
     let contractFunc = await new web3.eth.Contract(
       ERC1155Escrow,
-      "0xd607728Ba4746B7309670863244f6E5743D80eAb"
+      "0x38014B24404478963E15350ef898212a8c41e21f"
     );
     let res = await contractFunc.methods.orderNonce().call();
     if (res >= 1)
@@ -281,14 +281,14 @@ const Contractfunction = () => {
         "0xD4531a65A75D33De25D3B8e40da9d88939cd5CeA"
       );
       let approval = await contractFunc.methods
-        .isApprovedForAll(account, "0xd607728Ba4746B7309670863244f6E5743D80eAb")
+        .isApprovedForAll(account, "0x38014B24404478963E15350ef898212a8c41e21f")
         .call();
       console.log("Approval : ", approval);
       if (approval) {
         sellNFT(obj);
       } else {
         await contractFunc.methods
-          .setApprovalForAll("0xd607728Ba4746B7309670863244f6E5743D80eAb", true)
+          .setApprovalForAll("0x38014B24404478963E15350ef898212a8c41e21f", true)
           .send({ from: account })
           .on("transactionHash", (hash) => {
             console.log("progress", hash);
@@ -325,13 +325,13 @@ const Contractfunction = () => {
         "0x510601cb8Db1fD794DCE6186078b27A5e2944Ad6"
       );
       const approveStatus = await mdtTokenFunc.methods
-        .allowance(account, "0xd607728Ba4746B7309670863244f6E5743D80eAb")
+        .allowance(account, "0x38014B24404478963E15350ef898212a8c41e21f")
         .call();
       console.log("approveStatus", approveStatus);
       console.log("MDTcontractFunc", payAmount);
       approveStatus < payAmount
         ? await mdtTokenFunc.methods
-            .approve("0xd607728Ba4746B7309670863244f6E5743D80eAb", payAmount)
+            .approve("0x38014B24404478963E15350ef898212a8c41e21f", payAmount)
             .send({ from: account })
             .on("transactionHash", (hash) => {
               console.log("progress", hash);
@@ -365,44 +365,24 @@ const Contractfunction = () => {
 
       let contractFunc = await new web3.eth.Contract(
         ERC1155Escrow,
-        "0xd607728Ba4746B7309670863244f6E5743D80eAb"
+        "0x38014B24404478963E15350ef898212a8c41e21f"
       );
-      const owner = await contractFunc.methods.order(obj[1]).call();
-      if (owner.paymentToken == "0x0000000000000000000000000000000000000000") {
-        await contractFunc.methods
-          .buyNow(obj[1], obj[2])
-          .send({
-            from: account,
-            value: obj[0],
-          })
-          .on("transactionHash", (hash) => {
-            console.log("progress", hash);
-            toast.info("Transaction is Processing...");
-          })
-          .on("receipt", (receipt) => {
-            console.log("complete", receipt);
-            toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
-
-            OrderId();
-          });
-      } else {
-        await contractFunc.methods
-          .buyNowToken(obj[1], obj[2])
-          .send({
-            from: account,
-          })
-          .on("transactionHash", (hash) => {
-            console.log("progress", hash);
-            toast.info("Transaction is Processing...");
-          })
-          .on("receipt", (receipt) => {
-            console.log("complete", receipt);
-            toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
-
-            OrderId();
-          });
-      }
-      setLoading2(false);
+      await contractFunc.methods
+        .buyNow(obj[1], obj[2])
+        .send({
+          from: account,
+          value: obj[0],
+        })
+        .on("transactionHash", (hash) => {
+          console.log("progress", hash);
+          toast.info("Transaction is Processing...");
+        })
+        .on("receipt", (receipt) => {
+          console.log("complete", receipt);
+          toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
+          OrderId();
+          setLoading2(false);
+        });
     } catch (error) {
       setLoading2(false);
       console.log("Error: ", error);
@@ -413,7 +393,7 @@ const Contractfunction = () => {
     try {
       let contractFunc = await new web3.eth.Contract(
         ERC1155Escrow,
-        "0xd607728Ba4746B7309670863244f6E5743D80eAb"
+        "0x38014B24404478963E15350ef898212a8c41e21f"
       );
       console.log("contractFunc", contractFunc, "data3", ...obj);
       await contractFunc.methods
@@ -442,7 +422,7 @@ const Contractfunction = () => {
       setLoading5(true);
       let contractFunc = await new web3.eth.Contract(
         ERC1155Escrow,
-        "0xd607728Ba4746B7309670863244f6E5743D80eAb"
+        "0x38014B24404478963E15350ef898212a8c41e21f"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
@@ -475,12 +455,13 @@ const Contractfunction = () => {
         data.get("editionNumber"),
         data.get("pricePerNFT"),
         data.get("saleType"),
+        data.get("paymentToken"),
         data.get("nftCollection"),
       ];
       console.log("data3", ...obj);
       let contractFunc = await new web3.eth.Contract(
         ERC1155Escrow,
-        "0xd607728Ba4746B7309670863244f6E5743D80eAb"
+        "0x38014B24404478963E15350ef898212a8c41e21f"
       );
       console.log("contractFunc", contractFunc, "obj:", obj);
       await contractFunc.methods
@@ -1013,7 +994,6 @@ const Contractfunction = () => {
                     type="number"
                     step="any"
                     className="form-control"
-                    // id="exampleInputEmail1"
                     aria-describedby="emailHelp"
                     name="pricePerNFT"
                     required
@@ -1032,6 +1012,22 @@ const Contractfunction = () => {
                     id="exampleInputEmail1"
                     aria-describedby="emailHelp"
                     name="saleType"
+                    required
+                  />
+                </div>
+                <div className="mb-3 ">
+                  <label htmlFor="exampleInputEmail1" className="form-label">
+                    _paymentToken (address)
+                  </label>
+                  <input
+                    // disabled
+                    type="text"
+                    // value={token_id}
+                    placeholder="Enter Payment Token"
+                    className="form-control"
+                    id="exampleInputEmail1"
+                    aria-describedby="emailHelp"
+                    name="paymentToken"
                     required
                   />
                 </div>
