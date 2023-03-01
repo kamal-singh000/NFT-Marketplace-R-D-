@@ -193,7 +193,7 @@ const Contractfunction = () => {
     let obj = [];
     let contractFunc = await new web3.eth.Contract(
       ERC1155Escrow,
-      "0x38014B24404478963E15350ef898212a8c41e21f"
+      "0x724933ad37f8Cd73ee0d49CbC3b6F2752e5359c8"
     );
     let res = await contractFunc.methods.orderNonce().call();
     if (res >= 1)
@@ -206,6 +206,10 @@ const Contractfunction = () => {
           pricePerNFT: owner.pricePerNFT,
           endTime: owner.endTime,
           edition: owner.amount,
+          tokenName:
+            owner.paymentToken == "0x0000000000000000000000000000000000000000"
+              ? "BNB"
+              : "MDT",
         });
       }
     await setNfts(obj);
@@ -247,6 +251,7 @@ const Contractfunction = () => {
           setLoading1(false);
           toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
           getTokenDetails();
+          OrderId();
         });
     } catch (error) {
       setLoading1(false);
@@ -281,14 +286,14 @@ const Contractfunction = () => {
         "0xD4531a65A75D33De25D3B8e40da9d88939cd5CeA"
       );
       let approval = await contractFunc.methods
-        .isApprovedForAll(account, "0x38014B24404478963E15350ef898212a8c41e21f")
+        .isApprovedForAll(account, "0x724933ad37f8Cd73ee0d49CbC3b6F2752e5359c8")
         .call();
       console.log("Approval : ", approval);
       if (approval) {
         sellNFT(obj);
       } else {
         await contractFunc.methods
-          .setApprovalForAll("0x38014B24404478963E15350ef898212a8c41e21f", true)
+          .setApprovalForAll("0x724933ad37f8Cd73ee0d49CbC3b6F2752e5359c8", true)
           .send({ from: account })
           .on("transactionHash", (hash) => {
             console.log("progress", hash);
@@ -325,13 +330,13 @@ const Contractfunction = () => {
         "0x510601cb8Db1fD794DCE6186078b27A5e2944Ad6"
       );
       const approveStatus = await mdtTokenFunc.methods
-        .allowance(account, "0x38014B24404478963E15350ef898212a8c41e21f")
+        .allowance(account, "0x724933ad37f8Cd73ee0d49CbC3b6F2752e5359c8")
         .call();
       console.log("approveStatus", approveStatus);
       console.log("MDTcontractFunc", payAmount);
       approveStatus < payAmount
         ? await mdtTokenFunc.methods
-            .approve("0x38014B24404478963E15350ef898212a8c41e21f", payAmount)
+            .approve("0x724933ad37f8Cd73ee0d49CbC3b6F2752e5359c8", payAmount)
             .send({ from: account })
             .on("transactionHash", (hash) => {
               console.log("progress", hash);
@@ -339,7 +344,7 @@ const Contractfunction = () => {
             })
             .on("receipt", (receipt) => {
               console.log("complete", receipt);
-              setLoading2(false);
+              // setLoading2(false);
               // toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
               buyNFT(obj);
             })
@@ -365,24 +370,47 @@ const Contractfunction = () => {
 
       let contractFunc = await new web3.eth.Contract(
         ERC1155Escrow,
-        "0x38014B24404478963E15350ef898212a8c41e21f"
+        "0x724933ad37f8Cd73ee0d49CbC3b6F2752e5359c8"
       );
-      await contractFunc.methods
-        .buyNow(obj[1], obj[2])
-        .send({
-          from: account,
-          value: obj[0],
-        })
-        .on("transactionHash", (hash) => {
-          console.log("progress", hash);
-          toast.info("Transaction is Processing...");
-        })
-        .on("receipt", (receipt) => {
-          console.log("complete", receipt);
-          toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
-          OrderId();
-          setLoading2(false);
-        });
+      let orderNonce = await contractFunc.methods.order(obj[1]).call();
+      console.log("Ordering: ", orderNonce.paymentToken);
+      if (
+        orderNonce.paymentToken == "0x0000000000000000000000000000000000000000"
+      ) {
+        await contractFunc.methods
+          .buyNow(obj[1], obj[2])
+          .send({
+            from: account,
+            value: obj[0],
+          })
+          .on("transactionHash", (hash) => {
+            console.log("progress", hash);
+            toast.info("Transaction is Processing...");
+          })
+          .on("receipt", (receipt) => {
+            console.log("complete", receipt);
+            toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
+            OrderId();
+            setLoading2(false);
+          });
+      } else {
+        await contractFunc.methods
+          .buyNow(obj[1], obj[2])
+          .send({
+            from: account,
+            // value: obj[0],
+          })
+          .on("transactionHash", (hash) => {
+            console.log("progress", hash);
+            toast.info("Transaction is Processing...");
+          })
+          .on("receipt", (receipt) => {
+            console.log("complete", receipt);
+            toast.success(<SuccessPopUp txn={receipt.transactionHash} />);
+            OrderId();
+            setLoading2(false);
+          });
+      }
     } catch (error) {
       setLoading2(false);
       console.log("Error: ", error);
@@ -393,7 +421,7 @@ const Contractfunction = () => {
     try {
       let contractFunc = await new web3.eth.Contract(
         ERC1155Escrow,
-        "0x38014B24404478963E15350ef898212a8c41e21f"
+        "0x724933ad37f8Cd73ee0d49CbC3b6F2752e5359c8"
       );
       console.log("contractFunc", contractFunc, "data3", ...obj);
       await contractFunc.methods
@@ -422,7 +450,7 @@ const Contractfunction = () => {
       setLoading5(true);
       let contractFunc = await new web3.eth.Contract(
         ERC1155Escrow,
-        "0x38014B24404478963E15350ef898212a8c41e21f"
+        "0x724933ad37f8Cd73ee0d49CbC3b6F2752e5359c8"
       );
       console.log("contractFunc", contractFunc);
       await contractFunc.methods
@@ -461,7 +489,7 @@ const Contractfunction = () => {
       console.log("data3", ...obj);
       let contractFunc = await new web3.eth.Contract(
         ERC1155Escrow,
-        "0x38014B24404478963E15350ef898212a8c41e21f"
+        "0x724933ad37f8Cd73ee0d49CbC3b6F2752e5359c8"
       );
       console.log("contractFunc", contractFunc, "obj:", obj);
       await contractFunc.methods
@@ -1084,7 +1112,8 @@ const Contractfunction = () => {
                         <td className="">{owner.edition}</td>
                         <td>{owner.seller}</td>
                         <td>
-                          {web3.utils.fromWei(owner.pricePerNFT, "ether")} BNB
+                          {web3.utils.fromWei(owner.pricePerNFT, "ether")}{" "}
+                          {owner.tokenName}
                         </td>
                         <td>{owner.TokenID}</td>
                         {/* <td>
